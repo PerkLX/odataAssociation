@@ -1,19 +1,28 @@
-/* checksum : 5c9315d1871df558e309912fb5573ad8 */
+/* checksum : ce04bcebdefa30dbfe60a55eff207dbd */
 @cds.external : true
 @cds.persistence.skip : true
-@UI.Identification : [
-  {
-    $Type: 'UI.DataField',
-    Value: name
-  }
-]
 entity MasterData.Divisions {
-  @Common.Label : 'Name'
-  name : String(255);
-  @Common.Label : 'Description'
-  descr : localized String(1000);
   key division : String(20) not null;
+  name : String(20);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+entity MasterData.Test {
+  @Core.ComputedDefaultValue : true
+  key ID : UUID not null;
+  name : String(20);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+entity MasterData.Sponsor {
+  @Core.ComputedDefaultValue : true
+  key ID : UUID not null;
+  name : String(20);
+  description : String(20);
 };
 
 @cds.external : true
 service MasterData {};
+

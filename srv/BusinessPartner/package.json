@@ -9,24 +9,31 @@
     "@sap-cloud-sdk/http-client": "^3.15.0",
     "@sap-cloud-sdk/resilience": "^3.15.0",
     "@sap/cds": "^7",
+    "@sap/cds-dk": "^8.5.1",
     "express": "^4"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^1"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds-serve",
+    "watch-testproject": "cds watch --open testproject/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "requires": {
       "MasterData": {
         "kind": "odata",
         "model": "srv/external/MasterData",
+        "csrf": true,
+        "csrfInBatch": true,
         "credentials": {
           "url": "http://localhost:4007",
-          "path": ""
+          "path": "/MasterData"
         }
       }
     }
-  }
+  },
+  "sapux": [
+    "app/testproject"
+  ]
 }
