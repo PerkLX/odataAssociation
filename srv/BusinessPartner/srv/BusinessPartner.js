@@ -17,7 +17,7 @@ module.exports = cds.service.impl(async function businessPartnerService() {
     return md.run(req.query);
   });
 
-  const manyTables = ['BusinessPartners.Sponsor'];
+  const manyTables = ['BusinessPartners.Sponsor', 'BusinessPartners'];
 
   const expandMap = {
     division: {
@@ -43,7 +43,7 @@ module.exports = cds.service.impl(async function businessPartnerService() {
     },
   };
 
-  this.on('READ', [...manyTables, 'BusinessPartners'], async (req) => {
+  this.on('READ', manyTables, async (req) => {
     const tx = cds.transaction(req);
     const externalService = await cds.connect.to('MasterData');
 
@@ -121,7 +121,7 @@ module.exports = cds.service.impl(async function businessPartnerService() {
 
   this.on(
     ['READ', 'PATCH'],
-    [...manyTables.map((el) => `${el}.drafts`), 'BusinessPartners.drafts'],
+    manyTables.map((el) => `${el}.drafts`),
     async (req) => {
       const tx = cds.transaction(req);
       const externalService = await cds.connect.to('MasterData');
