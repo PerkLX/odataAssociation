@@ -118,4 +118,148 @@ module.exports = cds.service.impl(async function businessPartnerService() {
 
     return mainEntity;
   });
+
+  this.on(
+    ['READ', 'PATCH'],
+    [...manyTables.map((el) => `${el}.drafts`), 'BusinessPartners.drafts'],
+    async (req) => {
+      const tx = cds.transaction(req);
+      const externalService = await cds.connect.to('MasterData');
+      const draftEntity = await tx.run(req.query);
+
+      if (!draftEntity || draftEntity.length === 0) return draftEntity;
+
+      const draftEntityKeys = Array.isArray(draftEntity)
+        ? Object.keys(draftEntity[0])
+        : Object.keys(draftEntity);
+
+      if (draftEntityKeys.length === 0) return draftEntity;
+
+      for (const expandKey of Object.values(expandMap)) {
+        const { entity, localField, externalField, selectFields } = expandKey;
+
+        const processDraftEntity = async (draftEl) => {
+          if (draftEl[localField] && new Set(draftEntityKeys).has(localField)) {
+            const externalData = await externalService.run(
+              SELECT.one
+                .from(entity)
+                .where({ [externalField]: draftEl[localField] })
+                .columns(selectFields)
+            );
+
+            const expandEntityName = findKeyByField(
+              expandMap,
+              'entity',
+              entity
+            );
+
+            draftEl[localField] = externalData[externalField];
+            draftEl[expandEntityName] = externalData;
+          }
+        };
+
+        if (Array.isArray(draftEntity)) {
+          for (const draftEl of draftEntity) {
+            await processDraftEntity(draftEl);
+          }
+        } else {
+          await processDraftEntity(draftEntity);
+        }
+      }
+
+      return draftEntity;
+    }
+  );
+
+  const findKeyByField = (map, field, value) =>
+    Object.keys(map).find((key) => map[key][field] === value) || null;
+
+  // this.on(
+  //   ['READ', 'PATCH'],
+  //   [...manyTables.map((el) => `${el}.drafts`), 'BusinessPartners.drafts'],
+  //   async (req) => {
+  //     const tx = cds.transaction(req);
+
+  //     const draftEntity = await tx.run(req.query);
+
+  //     if (draftEntity && draftEntity.length !== 0) {
+  //       const externalService = await cds.connect.to('MasterData');
+
+  //       const draftEntityKeys = Array.isArray(draftEntity)
+  //         ? Object.keys(draftEntity[0])
+  //         : Object.keys(draftEntity);
+
+  //       if (Array.isArray(draftEntityKeys) && draftEntityKeys.length > 0) {
+  //         for (const expandKey of Object.values(expandMap)) {
+  //           if (Array.isArray(draftEntity)) {
+  //             for (const draftEl of draftEntity) {
+  //               if (
+  //                 draftEl[expandKey.localField] &&
+  //                 new Set(draftEntityKeys).has(expandKey.localField)
+  //               ) {
+  //                 const { entity, localField, externalField, selectFields } =
+  //                   expandKey;
+
+  //                 const externalData = await externalService.run(
+  //                   SELECT.one
+  //                     .from(entity)
+  //                     .where({
+  //                       [externalField]: draftEl[localField],
+  //                     })
+  //                     .columns(selectFields)
+  //                 );
+
+  //                 const expandEntityName = findKeyByField(
+  //                   expandMap,
+  //                   'entity',
+  //                   expandKey.entity
+  //                 );
+
+  //                 draftEl[localField] = externalData[externalField];
+  //                 draftEl[expandEntityName] = externalData;
+  //               }
+  //             }
+  //           }
+
+  //           if (
+  //             !Array.isArray(draftEntity) &&
+  //             draftEntity[expandKey.localField] &&
+  //             new Set(draftEntityKeys).has(expandKey.localField)
+  //           ) {
+  //             const { entity, localField, externalField, selectFields } =
+  //               expandKey;
+
+  //             const externalData = await externalService.run(
+  //               SELECT.one
+  //                 .from(entity)
+  //                 .where({
+  //                   [externalField]: draftEntity[localField],
+  //                 })
+  //                 .columns(selectFields)
+  //             );
+
+  //             const expandEntityName = findKeyByField(
+  //               expandMap,
+  //               'entity',
+  //               expandKey.entity
+  //             );
+
+  //             draftEntity[localField] = externalData[externalField];
+  //             draftEntity[expandEntityName] = externalData;
+  //           }
+  //         }
+  //       }
+  //     }
+  //     return draftEntity;
+  //   }
+  // );
+
+  // const findKeyByField = (map, field, value) => {
+  //   for (const key in map) {
+  //     if (map[key][field] === value) {
+  //       return key;
+  //     }
+  //   }
+  //   return null;
+  // };
 });

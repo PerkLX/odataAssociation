@@ -8,6 +8,7 @@ service BusinessPartner {
     @odata.draft.enabled
     entity BusinessPartners as projection on BP.BusinessPartners;
     entity BusinessPartners.Sponsor as projection on BP.BusinessPartners.Sponsor;
+    entity Type as projection on BP.Type;
     entity Divisions as projection on MD.Divisions;
     entity Test as projection on MD.Test; 
     entity Sponsor as projection on MD.Sponsor;

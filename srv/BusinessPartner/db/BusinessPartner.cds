@@ -13,6 +13,8 @@ entity BusinessPartners : cuid {
   division : Association to MD.Divisions on division.division = division_ID;
   test_ID: UUID;
   test: Association to MD.Test on test.ID = test_ID;
+  type_ID: UUID;
+  type: Association to Type on type.ID = type_ID;
   Sponsors: Composition of many BusinessPartners.Sponsor on Sponsors.BusinessPartner = $self;
 }
 
@@ -22,4 +24,9 @@ entity BusinessPartners.Sponsor {
     Sponsor_ID: UUID;
     BusinessPartner: Association to BusinessPartners on BusinessPartner.ID = BusinessPartner_ID;
     Sponsor: Association to one MD.Sponsor on Sponsor.ID = Sponsor_ID;
+}
+
+entity Type {
+  key ID: UUID;
+    value: String(20);
 }

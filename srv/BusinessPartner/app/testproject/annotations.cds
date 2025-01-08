@@ -71,6 +71,16 @@ annotate service.BusinessPartners with @(
                 Value : test.name,
                 Label : '{i18n>TestName}',
             },
+            {
+                $Type : 'UI.DataField',
+                Value : type_ID,
+                Label : 'type_ID',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : type.value,
+                Label : 'Type Name',
+            },
         ],
     },
     UI.SelectionFields : [
@@ -180,4 +190,23 @@ annotate service.BusinessPartners.Sponsor with {
         },
         Common.ValueListWithFixedValues : true
 )};
+
+annotate service.BusinessPartners with {
+    type_ID @(Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'Type',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : type_ID,
+                    ValueListProperty : 'ID',
+                },
+            ],
+        },
+        Common.ValueListWithFixedValues : true
+)};
+
+annotate service.Type with {
+    value @Common.FieldControl : #ReadOnly
+};
 

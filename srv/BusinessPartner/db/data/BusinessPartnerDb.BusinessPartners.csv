@@ -1,4 +1,4 @@
-ID;name;division_id;test_id
-fb558652-fabe-4c94-90fe-b19cb5274fbf;Engineering;1;fb558652-fabe-4c94-90fe-b19cb5274fbf
-1ec32772-b5a1-4c9c-abf8-71ad0b618a2e;Customer;2;1ec32772-b5a1-4c9c-abf8-71ad0b618a2e
-8c6cad5c-2649-49ad-a2c8-159543c55e56;Supplier;3;8c6cad5c-2649-49ad-a2c8-159543c55e56
+ID;name;division_id;test_id;type_id
+fb558652-fabe-4c94-90fe-b19cb5274fbf;Engineering;1;fb558652-fabe-4c94-90fe-b19cb5274fbf;fb558652-fabe-4c94-90fe-b19cb5274fbf
+1ec32772-b5a1-4c9c-abf8-71ad0b618a2e;Customer;2;1ec32772-b5a1-4c9c-abf8-71ad0b618a2e;1ec32772-b5a1-4c9c-abf8-71ad0b618a2e
+8c6cad5c-2649-49ad-a2c8-159543c55e56;Supplier;3;8c6cad5c-2649-49ad-a2c8-159543c55e56;8c6cad5c-2649-49ad-a2c8-159543c55e56
